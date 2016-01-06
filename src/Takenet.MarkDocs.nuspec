@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>$version$</version>
+    <releaseNotes>Takenet.Markdocs v$version$</releaseNotes>
+    <id>$title$</id>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <description>$description$</description>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>http://github.com/takenet/markdocs</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/takenet/markdocs/master/LICENSE</licenseUrl>
+    <summary>
+      ASP.NET MVC library that provide markdown documentation
+    </summary>
+    <tags>markdown, mvc, sitemap, takenet</tags>
+  </metadata>
+</package>
