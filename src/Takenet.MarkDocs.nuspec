@@ -17,8 +17,11 @@
       <dependency id="Microsoft.AspNet.Razor" version="3.0.0" />
       <dependency id="Microsoft.AspNet.WebPages" version="3.0.0" />
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+      <dependency id="MvcSiteMapProvider.MVC5" version="4.6.22" />
       <dependency id="MvcSiteMapProvider.MVC5.Core" version="4.6.22" />
-      <dependency id="Newtonsoft.Json" version="7.0.1" />
+      <dependency id="MvcSiteMapProvider.Web" version="4.6.1" />
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="WebActivatorEx" version="2.0.1" />
     </dependencies>
     <summary>
       ASP.NET MVC library that provide markdown documentation
