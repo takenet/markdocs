@@ -2,6 +2,12 @@
 
 Takenet.MarkDocs is a ASP.NET MVC library that provides markdown documentation.
 
+![TC](https://take-teamcity1.azurewebsites.net/app/rest/builds/buildType:(id:MarkDocs_Master)/statusIcon)
+
+<a href="https://www.nuget.org/packages/Takenet.MarkDocs" rel="NuGet">![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg)</a>
+
+<a href="https://www.nuget.org/packages/Takenet.MarkDocs" rel="NuGet">![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg)</a>
+
 ## Dependencies
 
 - .NET Framework 4.5.2
@@ -60,21 +66,36 @@ Create a SiteMap node to host the documentation links
 
 ### DocsDynamicNodeProvider
 
-Create a `DocsDynamicNodeProvider` extending `Takenet.MarkDocs.DocsDynamicNodeProvider` in your project
+Create a `DocsDynamicNodeProvider` reading the `Takenet.MarkDocs.DynamicNodeProvider` in your project
 
 ```
+using System.Collections.Generic;
+using MvcSiteMapProvider;
 using Takenet.MarkDocs;
 
 namespace YourNamespace
 {
-    public class DocsDynamicNodeProvider : MarkDocs.DocsDynamicNodeProvider
+    public class DocsDynamicNodeProvider : DynamicNodeProviderBase
     {
-        public DocsDynamicNodeProvider(MarkDocsProvider markDocs) : base(markDocs)
+        private Takenet.MarkDocs.DynamicNodeProvider DynamicNodeProvider { get; }
+
+        public DocsDynamicNodeProvider(Takenet.MarkDocs.DynamicNodeProvider dynamicNodeProvider) 
         {
+            DynamicNodeProvider = dynamicNodeProvider;
+        }
+
+        public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
+        {
+            return DynamicNodeProvider.GetDynamicNodeCollection(null).Select(n => new DynamicNode
+            {
+                Key = n.Key,
+                ParentKey = n.ParentKey,
+                Title = n.Title,
+                Action = n.Action
+            });
         }
     }
-}
-```
+}```
 
 ### DocsController
 

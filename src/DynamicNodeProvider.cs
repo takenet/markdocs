@@ -15,7 +15,7 @@ namespace Takenet.MarkDocs
 
         private MarkDocsProvider MarkDocs { get; }
 
-        public IEnumerable<DynamicNode> GetDynamicNodeCollection(DynamicNode node)
+        public IEnumerable<DynamicNode> GetDynamicNodeCollection()
         {
             return CreateSiteMapNodesAsync(MarkDocs.Root).ConfigureAwait(false).GetAwaiter().GetResult();
         }
