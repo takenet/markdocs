@@ -1,18 +1,31 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>$version$</version>
-    <releaseNotes>Takenet.Markdocs v$version$</releaseNotes>
-    <id>$title$</id>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
-    <description>$description$</description>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <id>Takenet.MarkDocs</id>
+    <version>0.1.0</version>
+    <title>MarkDocs</title>
+    <authors>takenet</authors>
+    <owners>takenet,rafaelromao</owners>
     <projectUrl>http://github.com/takenet/markdocs</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/takenet/markdocs/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Markdown Documentation Library</description>
+    <copyright>Copyright © 2015 Curupira S/A</copyright>
+    <tags>markdown</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.Mvc" version="5.0.0" />
+      <dependency id="Microsoft.AspNet.Razor" version="3.0.0" />
+      <dependency id="Microsoft.AspNet.WebPages" version="3.0.0" />
+      <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+      <dependency id="MvcSiteMapProvider.MVC5.Core" version="4.6.22" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
+    </dependencies>
     <summary>
       ASP.NET MVC library that provide markdown documentation
     </summary>
-    <tags>markdown, mvc, sitemap, takenet</tags>
   </metadata>
+  <files>
+    <file src="bin\Release\Takenet.MarkDocs.dll" target="lib\net451\Takenet.MarkDocs.dll" />
+    <file src="bin\Release\Takenet.MarkDocs.XML" target="lib\net451\Takenet.MarkDocs.XML" />
+  </files>
 </package>
