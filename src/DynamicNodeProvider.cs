@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using MvcSiteMapProvider;
 
 namespace Takenet.MarkDocs
 {
-    public class DocsDynamicNodeProvider : DynamicNodeProviderBase
+    public class DynamicNodeProvider
     {
-        public DocsDynamicNodeProvider(MarkDocsProvider markDocs)
+        public DynamicNodeProvider(MarkDocsProvider markDocs)
         {
             MarkDocs = markDocs;
         }
 
         private MarkDocsProvider MarkDocs { get; }
 
-        public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
+        public IEnumerable<DynamicNode> GetDynamicNodeCollection(DynamicNode node)
         {
             return CreateSiteMapNodesAsync(MarkDocs.Root).ConfigureAwait(false).GetAwaiter().GetResult();
         }
