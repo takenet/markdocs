@@ -21,6 +21,5 @@
   </metadata>
   <files>
     <file src="bin\Release\Takenet.MarkDocs.dll" target="lib\net451\Takenet.MarkDocs.dll" />
-    <file src="bin\Release\Takenet.MarkDocs.XML" target="lib\net451\Takenet.MarkDocs.XML" />
   </files>
 </package>
