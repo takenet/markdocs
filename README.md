@@ -98,17 +98,15 @@ namespace YourNamespace
 }
 ```
 
-### HomeController
+### Dependency Injection
 
-In your Home Controller constructor, inject a `MarkDocsProvider` and initialize its culture info to make sure any further attempt to access the MarkDocs will have the browser culture info set 
+You need to configure your DI to inject the `MarkDocsProvider` on your controllers and on your `DynamicNodeProvider`
+
+Make sure the instantiation is by web request, otherwise cached values will be reused for different users
 
 ```
-// You need to configure your DI to inject the MarkDocsProvider on your controllers
-public HomeController(MarkDocsProvider markDocs)
-{
-    // Must be initialized in the HomeController to make sure 
-    markDocs.SetCultureInfo(CultureInfo.CurrentUICulture);
-}
+// DI configuration for Simple injector
+container.RegisterPerWebRequest(() => new MarkDocsProvider(CultureInfo.CurrentUICulture));
 ```
 
 ### DocsController
