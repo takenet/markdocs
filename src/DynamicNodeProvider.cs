@@ -27,6 +27,7 @@ namespace Takenet.MarkDocs
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
             if (MarkDocs == null) throw new ArgumentNullException(nameof(MarkDocs));
+            if (MarkDocs.CultureInfo == null) throw new ArgumentNullException(nameof(MarkDocs.CultureInfo));
 
             var result = new List<DynamicNode>();
 

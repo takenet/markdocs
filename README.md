@@ -98,6 +98,19 @@ namespace YourNamespace
 }
 ```
 
+### HomeController
+
+In your Home Controller constructor, inject a `MarkDocsProvider` and initialize its culture info to make sure any further attempt to access the MarkDocs will have the browser culture info set 
+
+```
+// You need to configure your DI to inject the MarkDocsProvider on your controllers
+public HomeController(MarkDocsProvider markDocs)
+{
+    // Must be initialized in the HomeController to make sure 
+    markDocs.SetCultureInfo(CultureInfo.CurrentUICulture);
+}
+```
+
 ### DocsController
 
 Create a ASP.NET MVC Controller to handle the documentation requests
@@ -107,12 +120,10 @@ namespace YourNamespace.Controllers
 {
     public partial class DocsController : Controller
     {
-        // You need to configure your DI to inject the MarkDocsProvider on your controller
+        // You need to configure your DI to inject the MarkDocsProvider on your controllers
         public DocsController(MarkDocsProvider markDocs)
         {
             MarkDocs = markDocs;
-            // Your need to set this here to ensure the browser culture will be considered
-            MarkDocs.SetCultureInfo(CultureInfo.CurrentUICulture);
         }
 
         private MarkDocsProvider MarkDocs { get; }
@@ -123,7 +134,7 @@ namespace YourNamespace.Controllers
             var markdown = await MarkDocs.GetDocumentAsync(folder, document);
 
             // Return the view with the markdown document to be loaded
-            return View(MVC.Docs.Views.Show, markdown);
+            return View(markdown);
         }
     }
 }
