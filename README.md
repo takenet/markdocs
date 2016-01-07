@@ -86,7 +86,7 @@ namespace YourNamespace
 
         public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
         {
-            return DynamicNodeProvider.GetDynamicNodeCollection(null).Select(n => new DynamicNode
+            return DynamicNodeProvider.GetDynamicNodeCollection().Select(n => new DynamicNode
             {
                 Key = n.Key,
                 ParentKey = n.ParentKey,
