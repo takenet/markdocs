@@ -89,7 +89,7 @@ namespace Takenet.MarkDocs
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            return isLocalized ? (string)HttpContext.GetGlobalResourceObject("SiteMapResources", document) ?? document : document;
+            return isLocalized ? $"$resources: SiteMapResources,{document}" : document;
         }
     }
 }

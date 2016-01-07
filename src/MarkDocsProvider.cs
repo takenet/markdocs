@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.Caching;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,24 +17,37 @@ namespace Takenet.MarkDocs
     {
         private class MarkDocsCache
         {
-            private IDictionary<string, object> InternalCache { get; } = new Dictionary<string, object>();
+            public MarkDocsCache(ObjectCache objectCache)
+            {
+                ObjectCache = objectCache;
+            }
+
+            private ObjectCache ObjectCache { get; }
 
             internal bool TryGetCachedValue(string key, out object value, [CallerMemberName] string group = null)
             {
-                return InternalCache.TryGetValue($"{group}-{key}", out value);
+                key = $"{group}-{key}";
+                if (!ObjectCache.Contains(key))
+                {
+                    value = null;
+                    return false;
+                }
+                value = ObjectCache.Get(key);
+                return true;
             }
 
             internal void SetCachedValue(string key, object value, [CallerMemberName] string group = null)
             {
-                InternalCache[$"{group}-{key}"] = value;
+                key = $"{group}-{key}";
+                ObjectCache.Set(key, value, DateTimeOffset.Now.AddDays(1));
             }
         }
 
         private static readonly MarkDocsSection MarkDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
 
-        public MarkDocsProvider()
+        public MarkDocsProvider(ObjectCache cache)
         {
-            Cache = new MarkDocsCache();
+            Cache = new MarkDocsCache(cache);
         }
 
         private MarkDocsCache Cache { get; }
