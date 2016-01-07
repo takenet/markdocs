@@ -17,11 +17,17 @@ namespace Takenet.MarkDocs
 
         public IEnumerable<DynamicNode> GetDynamicNodeCollection()
         {
+            if (MarkDocs == null) throw new ArgumentNullException(nameof(MarkDocs));
+            if (MarkDocs.Root == null) throw new ArgumentNullException(nameof(MarkDocs.Root));
+
             return CreateSiteMapNodesAsync(MarkDocs.Root).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private async Task<IEnumerable<DynamicNode>> CreateSiteMapNodesAsync(NodeElement item, string parentKey = null)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (MarkDocs == null) throw new ArgumentNullException(nameof(MarkDocs));
+
             var result = new List<DynamicNode>();
 
             var parentSiteMapNode = new DynamicNode
@@ -63,6 +69,9 @@ namespace Takenet.MarkDocs
 
         private IEnumerable<DynamicNode> CreateSiteMapNodes(bool isLocalized, string folder, IEnumerable<string> documents)
         {
+            if (documents == null) throw new ArgumentNullException(nameof(documents));
+            if (folder == null) throw new ArgumentNullException(nameof(folder));
+
             return documents.Select(document =>
             {
                 document = document.Split('-', '.').Skip(1).First();
@@ -77,6 +86,8 @@ namespace Takenet.MarkDocs
 
         private string DisplayFor(string document, bool isLocalized)
         {
+            if (document == null) throw new ArgumentNullException(nameof(document));
+
             return isLocalized ? (string)HttpContext.GetGlobalResourceObject("SiteMapResources", document, MarkDocs.CultureInfo) ?? document : document;
         }
     }
