@@ -106,7 +106,7 @@ Make sure the instantiation is by web request, otherwise cached values will be r
 
 ```
 // DI configuration for Simple injector
-container.RegisterPerWebRequest(() => new MarkDocsProvider(CultureInfo.CurrentUICulture));
+container.RegisterPerWebRequest<MarkDocsProvider>();
 ```
 
 ### DocsController

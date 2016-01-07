@@ -31,16 +31,12 @@ namespace Takenet.MarkDocs
 
         private static readonly MarkDocsSection MarkDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
 
-        public MarkDocsProvider(CultureInfo cultureInfo)
+        public MarkDocsProvider()
         {
             Cache = new MarkDocsCache();
-            CultureInfo = cultureInfo;
         }
 
         private MarkDocsCache Cache { get; }
-
-        public CultureInfo CultureInfo { get; }
-
         public NodeElement Root => MarkDocsSettings.Items.Single();
 
         private IEnumerable<NodeElement> Flatten()
@@ -64,7 +60,7 @@ namespace Takenet.MarkDocs
 
             var allNodes = Flatten();
             var node = allNodes.Single(n => n.TargetFolder == nodeId);
-            var localizationPathPart = node.Localized ? $"{CultureInfo.TwoLetterISOLanguageName}" : string.Empty;
+            var localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
             var result = $"https://raw.githubusercontent.com/{node.Owner}/{node.Repo}/{node.Branch}/{node.SourceFolder}/{localizationPathPart}";
 
             Cache.SetCachedValue(nodeId, result);
@@ -112,7 +108,7 @@ namespace Takenet.MarkDocs
             var docs = urls.Single(u => u.Key == node.SourceFolder).Value;
             if (node.Localized)
             {
-                var cultureCode = CultureInfo.TwoLetterISOLanguageName;
+                var cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 urls = await GetUrlsFromChildItemsAsync(docs, node.Username, node.Password).ConfigureAwait(false);
                 docs = urls.Single(u => u.Key == cultureCode).Value;
             }

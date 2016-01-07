@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -27,7 +28,6 @@ namespace Takenet.MarkDocs
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
             if (MarkDocs == null) throw new ArgumentNullException(nameof(MarkDocs));
-            if (MarkDocs.CultureInfo == null) throw new ArgumentNullException(nameof(MarkDocs.CultureInfo));
 
             var result = new List<DynamicNode>();
 
@@ -45,7 +45,7 @@ namespace Takenet.MarkDocs
             var docs = urls.Single(u => u.Key == item.SourceFolder).Value;
             if (item.Localized)
             {
-                var cultureCode = MarkDocs.CultureInfo.TwoLetterISOLanguageName;
+                var cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 urls = await MarkDocs.GetUrlsFromChildItemsAsync(docs, item.Username, item.Password).ConfigureAwait(false);
                 docs = urls.Single(u => u.Key == cultureCode).Value;
             }
@@ -89,7 +89,7 @@ namespace Takenet.MarkDocs
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            return isLocalized ? (string)HttpContext.GetGlobalResourceObject("SiteMapResources", document, MarkDocs.CultureInfo) ?? document : document;
+            return isLocalized ? (string)HttpContext.GetGlobalResourceObject("SiteMapResources", document) ?? document : document;
         }
     }
 }
