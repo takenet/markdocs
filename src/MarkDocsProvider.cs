@@ -31,14 +31,15 @@ namespace Takenet.MarkDocs
 
         private static readonly MarkDocsSection MarkDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
 
-        public MarkDocsProvider()
+        public MarkDocsProvider(CultureInfo cultureInfo)
         {
             Cache = new MarkDocsCache();
+            CultureInfo = cultureInfo;
         }
 
         private MarkDocsCache Cache { get; }
 
-        public CultureInfo CultureInfo { get; set; }
+        public CultureInfo CultureInfo { get; }
 
         public NodeElement Root => MarkDocsSettings.Items.Single();
 
@@ -187,11 +188,6 @@ namespace Takenet.MarkDocs
 
                 return result;
             }
-        }
-
-        public void SetCultureInfo(CultureInfo cultureInfo)
-        {
-            CultureInfo = cultureInfo;
         }
     }
 }
