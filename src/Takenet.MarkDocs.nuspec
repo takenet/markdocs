@@ -14,9 +14,6 @@
     <tags>markdown</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0.8" />
-      <dependency id="NLog" version="4.2.3" />
-      <dependency id="NLog.Config" version="4.2.3" />
-      <dependency id="NLog.Schema" version="4.0.0" />
     </dependencies>
     <summary>
       ASP.NET MVC library that provide markdown documentation
