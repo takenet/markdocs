@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace Takenet.MarkDocs
 {
@@ -49,26 +50,14 @@ namespace Takenet.MarkDocs
 
         public MarkDocsProvider(ObjectCache cache)
         {
-            PrepareEventLog();
             Cache = new MarkDocsCache(cache);
         }
 
-        private string EventSource { get; } = GetWebEntryAssembly()?.GetName().Name ?? typeof (MarkDocsProvider).FullName;
-
-        private void PrepareEventLog()
-        {
-            if (!EventLog.SourceExists(EventSource))
-                EventLog.CreateEventSource(EventSource, typeof(MarkDocsProvider).FullName);
-        }
-
-        private void WriteLog(string message)
-        {
-            EventLog.WriteEntry(EventSource, message);
-        }
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private void WriteCurrentCultureInfoToLog([CallerMemberName] string methodName = null)
         {
-            WriteLog($"{DateTime.Now} -> @{methodName}: CultureInfo.CurrentUICulture = {CultureInfo.CurrentUICulture}");
+            Log.Debug($"{DateTime.Now} -> @{methodName}: CultureInfo.CurrentUICulture = {CultureInfo.CurrentUICulture}");
         }
 
         private static Assembly GetWebEntryAssembly()
@@ -90,6 +79,7 @@ namespace Takenet.MarkDocs
         }
 
         private MarkDocsCache Cache { get; }
+
         public NodeElement Root => MarkDocsSettings.Items.Single();
 
         private IEnumerable<NodeElement> Flatten()
