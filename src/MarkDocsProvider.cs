@@ -57,7 +57,7 @@ namespace Takenet.MarkDocs
 
         private void WriteCurrentCultureInfoToLog([CallerMemberName] string methodName = null)
         {
-            Log.Debug($"{DateTime.Now} -> @{methodName}: CultureInfo.CurrentUICulture = {CultureInfo.CurrentUICulture}");
+            Log.Debug($"@{methodName}: CultureInfo.CurrentUICulture = {CultureInfo.CurrentUICulture}");
         }
 
         private static Assembly GetWebEntryAssembly()
