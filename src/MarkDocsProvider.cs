@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.Caching;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -47,7 +49,44 @@ namespace Takenet.MarkDocs
 
         public MarkDocsProvider(ObjectCache cache)
         {
+            PrepareEventLog();
             Cache = new MarkDocsCache(cache);
+        }
+
+        private string EventSource { get; } = GetWebEntryAssembly()?.GetName().Name ?? typeof (MarkDocsProvider).FullName;
+
+        private void PrepareEventLog()
+        {
+            if (!EventLog.SourceExists(EventSource))
+                EventLog.CreateEventSource(EventSource, typeof(MarkDocsProvider).FullName);
+        }
+
+        private void WriteLog(string message)
+        {
+            EventLog.WriteEntry(EventSource, message);
+        }
+
+        private void WriteCurrentCultureInfoToLog([CallerMemberName] string methodName = null)
+        {
+            WriteLog($"{DateTime.Now} -> @{methodName}: CultureInfo.CurrentUICulture = {CultureInfo.CurrentUICulture}");
+        }
+
+        private static Assembly GetWebEntryAssembly()
+        {
+            if (Assembly.GetEntryAssembly() != null)
+                return Assembly.GetEntryAssembly();
+
+            if (System.Web.HttpContext.Current == null ||
+                System.Web.HttpContext.Current.ApplicationInstance == null)
+                return null;
+
+            var type = System.Web.HttpContext.Current.ApplicationInstance.GetType();
+            while (type != null && type.Namespace == "ASP")
+            {
+                type = type.BaseType;
+            }
+
+            return type?.Assembly;
         }
 
         private MarkDocsCache Cache { get; }
@@ -66,8 +105,10 @@ namespace Takenet.MarkDocs
             }
         }
 
-        public string BaseUrlForRawFiles(string nodeId)
+        private string BaseUrlForRawFiles(string nodeId)
         {
+            WriteCurrentCultureInfoToLog();
+
             object value;
             if (Cache.TryGetCachedValue(nodeId, out value))
                 return value as string;
@@ -84,6 +125,8 @@ namespace Takenet.MarkDocs
 
         public async Task<string> GetDocumentAsync(string folder, string document)
         {
+            WriteCurrentCultureInfoToLog();
+
             var key = $"{folder}.{document}";
             object value;
             if (Cache.TryGetCachedValue(key, out value))
@@ -107,6 +150,8 @@ namespace Takenet.MarkDocs
 
         private async Task<string> GetFileNameAsync(NodeElement node, string document)
         {
+            WriteCurrentCultureInfoToLog();
+
             var fileNames = await GetFileNamesAsync(node).ConfigureAwait(false); ;
             var fileName = fileNames.Single(fn => fn.EndsWith($"-{document}.md"));
             return fileName;
@@ -114,6 +159,8 @@ namespace Takenet.MarkDocs
 
         private async Task<IEnumerable<string>> GetFileNamesAsync(NodeElement node)
         {
+            WriteCurrentCultureInfoToLog();
+
             var urls = await GetUrlsFromChildItemsAsync(node).ConfigureAwait(false); ;
             var docs = urls.Single(u => u.Key == node.SourceFolder).Value;
             var cultureCode = string.Empty;
@@ -138,12 +185,16 @@ namespace Takenet.MarkDocs
 
         internal async Task<IDictionary<string, string>> GetUrlsFromChildItemsAsync(NodeElement item)
         {
+            WriteCurrentCultureInfoToLog();
+
             var parentUrl = $"https://api.github.com/repos/{item.Owner}/{item.Repo}/git/trees/{item.Branch}";
             return await GetUrlsFromChildItemsAsync(parentUrl, item.Username, item.Password).ConfigureAwait(false);
         }
 
         internal async Task<IDictionary<string, string>> GetUrlsFromChildItemsAsync(string parentUrl, string username, string password)
         {
+            WriteCurrentCultureInfoToLog();
+
             object value;
             if (Cache.TryGetCachedValue(parentUrl, out value))
                 return value as IDictionary<string, string>;
@@ -164,6 +215,8 @@ namespace Takenet.MarkDocs
 
         internal async Task<IEnumerable<string>> GetChildItemsFileNamesAsync(string parentUrl, string username, string password)
         {
+            WriteCurrentCultureInfoToLog();
+
             object value;
             if (Cache.TryGetCachedValue(parentUrl, out value))
                 return value as IEnumerable<string>;
@@ -179,8 +232,10 @@ namespace Takenet.MarkDocs
             return result;
         }
 
-        public async Task<string> GetStringAsync(string url, string username, string password)
+        private async Task<string> GetStringAsync(string url, string username, string password)
         {
+            WriteCurrentCultureInfoToLog();
+
             object value;
             if (Cache.TryGetCachedValue(url, out value))
                 return value as string;
