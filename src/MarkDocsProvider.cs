@@ -114,21 +114,24 @@ namespace Takenet.MarkDocs
 
         private async Task<IEnumerable<string>> GetFileNamesAsync(NodeElement node)
         {
-            object value;
-            if (Cache.TryGetCachedValue(node.TargetFolder, out value))
-                return value as IEnumerable<string>;
-
             var urls = await GetUrlsFromChildItemsAsync(node).ConfigureAwait(false); ;
             var docs = urls.Single(u => u.Key == node.SourceFolder).Value;
+            var cultureCode = string.Empty;
             if (node.Localized)
             {
-                var cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 urls = await GetUrlsFromChildItemsAsync(docs, node.Username, node.Password).ConfigureAwait(false);
                 docs = urls.Single(u => u.Key == cultureCode).Value;
             }
+
+            var key = $"{node.TargetFolder}-{cultureCode}";
+            object value;
+            if (Cache.TryGetCachedValue(key, out value))
+                return value as IEnumerable<string>;
+
             var fileNames = await GetChildItemsFileNamesAsync(docs, node.Username, node.Password);
 
-            Cache.SetCachedValue(node.TargetFolder, fileNames);
+            Cache.SetCachedValue(key, fileNames);
 
             return fileNames;
         }
