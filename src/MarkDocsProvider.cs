@@ -114,7 +114,10 @@ namespace Takenet.MarkDocs
                 return value as string;
 
             var allNodes = Flatten();
-            var node = allNodes.Single(n => n.TargetFolder == nodeId);
+            var node = allNodes.SingleOrDefault(n => n.TargetFolder == nodeId);
+            if (node == null)
+                return null;
+
             var localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
             var result = $"https://raw.githubusercontent.com/{node.Owner}/{node.Repo}/{node.Branch}/{node.SourceFolder}/{localizationPathPart}";
 
@@ -132,9 +135,17 @@ namespace Takenet.MarkDocs
             if (Cache.TryGetCachedValue(key, out value))
                 return value as string;
 
+            const string errorMessage = "Could not find the requested document!";
+
             var sourceUrl = BaseUrlForRawFiles(folder);
 
-            var node = Flatten().Single(n => n.TargetFolder == folder);
+            if (sourceUrl == null)
+                return errorMessage;
+
+            var node = Flatten().SingleOrDefault(n => n.TargetFolder == folder);
+
+            if (node == null)
+                return errorMessage;
 
             document = await GetFileNameAsync(node, document);
             var resourceUri = $"{sourceUrl}/{document}";
