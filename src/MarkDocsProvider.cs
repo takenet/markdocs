@@ -58,6 +58,9 @@ namespace Takenet.MarkDocs
                 return errorMessage;
 
             document = await GetFileNameAsync(node, document);
+            if (document == null)
+                return errorMessage;
+
             var resourceUri = $"{sourceUrl}/{document}";
             using (var webClient = new HttpClient())
             {
@@ -69,7 +72,7 @@ namespace Takenet.MarkDocs
         private async Task<string> GetFileNameAsync(NodeElement node, string document)
         {
             var fileNames = await GetFileNamesAsync(node).ConfigureAwait(false); ;
-            var fileName = fileNames.Single(fn => fn.EndsWith($"-{document}.md"));
+            var fileName = fileNames.SingleOrDefault(fn => fn.EndsWith($"-{document}.md"));
             return fileName;
         }
 
@@ -77,12 +80,15 @@ namespace Takenet.MarkDocs
         {
             var urls = await GetUrlsFromChildItemsAsync(node).ConfigureAwait(false); ;
             var docs = urls.Single(u => u.Key == node.SourceFolder).Value;
-            var cultureCode = string.Empty;
+            string cultureCode;
             if (node.Localized)
             {
                 cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 urls = await GetUrlsFromChildItemsAsync(docs, node.Username, node.Password).ConfigureAwait(false);
-                docs = urls.Single(u => u.Key == cultureCode).Value;
+                docs = urls.SingleOrDefault(u => u.Key == cultureCode).Value ??
+                       urls.SingleOrDefault(u => u.Key == "en").Value;
+                if (docs == null)
+                    return Enumerable.Empty<string>();
             }
 
             var fileNames = await GetChildItemsFileNamesAsync(docs, node.Username, node.Password);
