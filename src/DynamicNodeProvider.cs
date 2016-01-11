@@ -35,7 +35,7 @@ namespace Takenet.MarkDocs
                 Key = Guid.NewGuid().ToString(),
                 ParentKey = parentKey,
                 Title = DisplayFor(item.Display, item.Localized),
-                Action = $"{item.TargetFolder}"
+                Folder = item.TargetFolder
             };
             result.Add(parentSiteMapNode);
 
@@ -79,7 +79,8 @@ namespace Takenet.MarkDocs
                 {
                     Key = Guid.NewGuid().ToString(),
                     Title = DisplayFor(document, isLocalized),
-                    Action = $"{folder}/{document}"
+                    Folder = folder,
+                    Document = document
                 };
             });
         }
