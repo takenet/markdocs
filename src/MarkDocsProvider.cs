@@ -17,32 +17,6 @@ namespace Takenet.MarkDocs
 
         public NodeElement Root => MarkDocsSettings.Items.Single();
 
-        private IEnumerable<NodeElement> Flatten()
-        {
-            var nodes = new Stack<INode>(new[] { MarkDocsSettings });
-            while (nodes.Any())
-            {
-                var node = nodes.Pop();
-                var nodeElement = node as NodeElement;
-                if (nodeElement != null)
-                    yield return nodeElement;
-                foreach (var n in node.Items) nodes.Push(n);
-            }
-        }
-
-        private string BaseUrlForRawFiles(string nodeId)
-        {
-            var allNodes = Flatten();
-            var node = allNodes.SingleOrDefault(n => n.TargetFolder == nodeId);
-            if (node == null)
-                return null;
-
-            var localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
-            var result = $"https://raw.githubusercontent.com/{node.Owner}/{node.Repo}/{node.Branch}/{node.SourceFolder}/{localizationPathPart}";
-
-            return result;
-        }
-
         public async Task<string> GetDocumentAsync(string folder, string document)
         {
             const string errorMessage = "Could not find the requested document!";
@@ -69,9 +43,36 @@ namespace Takenet.MarkDocs
             }
         }
 
+        private IEnumerable<NodeElement> Flatten()
+        {
+            var nodes = new Stack<INode>(new[] { MarkDocsSettings });
+            while (nodes.Any())
+            {
+                var node = nodes.Pop();
+                var nodeElement = node as NodeElement;
+                if (nodeElement != null)
+                    yield return nodeElement;
+                foreach (var n in node.Items) nodes.Push(n);
+            }
+        }
+
+        private string BaseUrlForRawFiles(string nodeId)
+        {
+            var allNodes = Flatten();
+            var node = allNodes.SingleOrDefault(n => n.TargetFolder == nodeId);
+            if (node == null)
+                return null;
+
+            var localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
+            var result = $"https://raw.githubusercontent.com/{node.Owner}/{node.Repo}/{node.Branch}/{node.SourceFolder}/{localizationPathPart}";
+
+            return result;
+        }
+
+
         private async Task<string> GetFileNameAsync(NodeElement node, string document)
         {
-            var fileNames = await GetFileNamesAsync(node).ConfigureAwait(false); ;
+            var fileNames = await GetFileNamesAsync(node).ConfigureAwait(false);
             var fileName = fileNames.SingleOrDefault(fn => fn.EndsWith($"-{document}.md"));
             return fileName;
         }
@@ -130,16 +131,18 @@ namespace Takenet.MarkDocs
             using (var webClient = new HttpClient())
             {
                 var uri = new Uri(url, UriKind.Absolute);
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
-                request.Headers.UserAgent.Add(new ProductInfoHeaderValue(username, ""));
-                var authentication = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-                request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authentication);
+                using (var request = new HttpRequestMessage(HttpMethod.Get, uri))
+                {
+                    request.Headers.UserAgent.Add(new ProductInfoHeaderValue(username, ""));
+                    var authentication = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authentication);
 
-                var response = await webClient.SendAsync(request).ConfigureAwait(false);
+                    var response = await webClient.SendAsync(request).ConfigureAwait(false);
 
-                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                return result;
+                    return result;
+                }
             }
         }
     }
