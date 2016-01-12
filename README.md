@@ -54,6 +54,11 @@ Register the GitHub project documentation sources
   </markdocs>
 ```
 
+An optional default language could be defined on top level element
+```
+  <markdocs defaultLanguage="en">
+```
+
 ### Changes to mvc.sitemap
 
 Create a SiteMap node to host the documentation links
