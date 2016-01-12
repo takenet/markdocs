@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -38,8 +39,16 @@ namespace Takenet.MarkDocs
             var resourceUri = $"{sourceUrl}/{document}";
             using (var webClient = new HttpClient())
             {
-                var result = await webClient.GetStringAsync(resourceUri);
-                return result;
+                var httpResponse = await webClient.GetAsync(resourceUri);
+                if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(MarkDocsSettings.DefaultLanguage))
+                {
+                    sourceUrl = BaseUrlForRawFiles(folder, MarkDocsSettings.DefaultLanguage);
+                    resourceUri = $"{sourceUrl}/{document}";
+                    httpResponse = await webClient.GetAsync(resourceUri);
+                }
+
+                httpResponse.EnsureSuccessStatusCode();
+                return await httpResponse.Content.ReadAsStringAsync();
             }
         }
 
@@ -56,14 +65,18 @@ namespace Takenet.MarkDocs
             }
         }
 
-        private string BaseUrlForRawFiles(string nodeId)
+        private string BaseUrlForRawFiles(string nodeId, string language = null)
         {
             var allNodes = Flatten();
             var node = allNodes.SingleOrDefault(n => n.TargetFolder == nodeId);
             if (node == null)
                 return null;
 
-            var localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
+            var localizationPathPart = language;
+            if (localizationPathPart == null)
+            {
+                localizationPathPart = node.Localized ? $"{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}" : string.Empty;
+            }
             var result = $"https://raw.githubusercontent.com/{node.Owner}/{node.Repo}/{node.Branch}/{node.SourceFolder}/{localizationPathPart}";
 
             return result;
