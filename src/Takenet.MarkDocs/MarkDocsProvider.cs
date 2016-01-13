@@ -16,9 +16,9 @@ namespace Takenet.MarkDocs
     {
         static readonly MarkDocsSection markDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
 
-        public NodeElement Root => GetSettings().Items.Single();
+        public NodeElement Root => Settings.Items.Single();
 
-        protected virtual MarkDocsSection GetSettings() => markDocsSettings;
+        protected virtual MarkDocsSection Settings => markDocsSettings;
 
         protected virtual HttpClient GetWebClient() => new HttpClient();
 
@@ -45,9 +45,9 @@ namespace Takenet.MarkDocs
             using (var webClient = GetWebClient())
             {
                 var httpResponse = await webClient.GetAsync(resourceUri);
-                if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(GetSettings().DefaultLanguage))
+                if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(Settings.DefaultLanguage))
                 {
-                    sourceUrl = BaseUrlForRawFiles(folder, GetSettings().DefaultLanguage);
+                    sourceUrl = BaseUrlForRawFiles(folder, Settings.DefaultLanguage);
                     resourceUri = $"{sourceUrl}/{document}";
                     httpResponse = await webClient.GetAsync(resourceUri);
                 }
@@ -59,7 +59,7 @@ namespace Takenet.MarkDocs
 
         private IEnumerable<NodeElement> Flatten()
         {
-            var nodes = new Stack<INode>(new[] { GetSettings() });
+            var nodes = new Stack<INode>(new[] { Settings });
             while (nodes.Any())
             {
                 var node = nodes.Pop();

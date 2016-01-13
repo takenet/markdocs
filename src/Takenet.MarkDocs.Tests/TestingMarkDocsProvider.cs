@@ -14,7 +14,7 @@ namespace Takenet.MarkDocs.Tests
             HttpMessageHandler = handler ?? Substitute.For<HttpMessageHandler>();
         }
 
-        protected override MarkDocsSection GetSettings() => MarkDocsSettings;
+        protected override MarkDocsSection Settings => MarkDocsSettings;
 
         protected override HttpClient GetWebClient() => new HttpClient(HttpMessageHandler);
     }
