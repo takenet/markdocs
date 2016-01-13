@@ -14,9 +14,14 @@ namespace Takenet.MarkDocs
 {
     public class MarkDocsProvider
     {
-        private static readonly MarkDocsSection MarkDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
+        static readonly MarkDocsSection markDocsSettings = ConfigurationManager.GetSection("markdocs") as MarkDocsSection;
 
-        public NodeElement Root => MarkDocsSettings.Items.Single();
+        public NodeElement Root => GetSettings().Items.Single();
+
+        protected virtual MarkDocsSection GetSettings() => markDocsSettings;
+
+        protected virtual HttpClient GetWebClient() => new HttpClient();
+
 
         public async Task<string> GetDocumentAsync(string folder, string document)
         {
@@ -37,12 +42,12 @@ namespace Takenet.MarkDocs
                 return errorMessage;
 
             var resourceUri = $"{sourceUrl}/{document}";
-            using (var webClient = new HttpClient())
+            using (var webClient = GetWebClient())
             {
                 var httpResponse = await webClient.GetAsync(resourceUri);
-                if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(MarkDocsSettings.DefaultLanguage))
+                if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(GetSettings().DefaultLanguage))
                 {
-                    sourceUrl = BaseUrlForRawFiles(folder, MarkDocsSettings.DefaultLanguage);
+                    sourceUrl = BaseUrlForRawFiles(folder, GetSettings().DefaultLanguage);
                     resourceUri = $"{sourceUrl}/{document}";
                     httpResponse = await webClient.GetAsync(resourceUri);
                 }
@@ -54,7 +59,7 @@ namespace Takenet.MarkDocs
 
         private IEnumerable<NodeElement> Flatten()
         {
-            var nodes = new Stack<INode>(new[] { MarkDocsSettings });
+            var nodes = new Stack<INode>(new[] { GetSettings() });
             while (nodes.Any())
             {
                 var node = nodes.Pop();
@@ -92,7 +97,7 @@ namespace Takenet.MarkDocs
 
         private async Task<IEnumerable<string>> GetFileNamesAsync(NodeElement node)
         {
-            var urls = await GetUrlsFromChildItemsAsync(node).ConfigureAwait(false); ;
+            var urls = await GetUrlsFromChildItemsAsync(node).ConfigureAwait(false);
             var docs = urls.Single(u => u.Key == node.SourceFolder).Value;
             string cultureCode;
             if (node.Localized)
@@ -141,7 +146,7 @@ namespace Takenet.MarkDocs
 
         private async Task<string> GetStringAsync(string url, string username, string password)
         {
-            using (var webClient = new HttpClient())
+            using (var webClient = GetWebClient())
             {
                 var uri = new Uri(url, UriKind.Absolute);
                 using (var request = new HttpRequestMessage(HttpMethod.Get, uri))
