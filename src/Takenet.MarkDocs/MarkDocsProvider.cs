@@ -105,7 +105,7 @@ namespace Takenet.MarkDocs
                 cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 urls = await GetUrlsFromChildItemsAsync(docs, node.Username, node.Password).ConfigureAwait(false);
                 docs = urls.SingleOrDefault(u => u.Key == cultureCode).Value ??
-                       urls.SingleOrDefault(u => u.Key == "en").Value;
+                       urls.SingleOrDefault(u => u.Key == Settings.DefaultLanguage).Value;
                 if (docs == null)
                     return Enumerable.Empty<string>();
             }
