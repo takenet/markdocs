@@ -6,87 +6,12 @@
 
 ## How to use
 
-### Changes to Web.Config
+ - Change `markdocs` section in `Web.Config` with GitHub project documentation sources.
 
-Register the session `markdocs` in the `Web.Config` file, like so:
+>  * *You can generate your access token on [this link](https://github.com/settings/tokens)*
+>  * *An optional default language could be defined on top level element* `<markdocs defaultLanguage="en">`
 
-```xml
-<configSections>
-    <section name="markdocs" type="Takenet.MarkDocs.MarkDocsSection, Takenet.MarkDocs, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null" requirePermission="false" />
-</configSections>
-```
-
-Register the GitHub project documentation sources
-
-```xml
-<markdocs>
-    <node display="documentation"
-        targetFolder="home"
-        username="<YOUR_GITUB_USER>"
-        password="<YOUR_GITHUB_ACCESSTOKEN>"
-        owner="takenet" 
-        repo="markdocs" 
-        branch="master" 
-        sourceFolder="docs" 
-        localized="true">
-    <node display="sdks"
-        targetFolder="sdks" 
-        username="<YOUR_GITUB_USER>"
-        password="<YOUR_GITHUB_ACCESSTOKEN>"
-        owner="takenet" 
-        repo="markdocs-sdks" 
-        branch="master" 
-        sourceFolder="docs" 
-        localized="true" />
-    </node>
-</markdocs>
-```
-
-* *You can generate your access token on this link: https://github.com/settings/tokens*
-
-An optional default language could be defined on top level element
-
-```xml
-<markdocs defaultLanguage="en">
-```
-
-### DocsDynamicNodeProvider
-
-Create a `DocsDynamicNodeProvider` reading the `Takenet.MarkDocs.DynamicNodeProvider` in your project
-
-```csharp
-using System.Collections.Generic;
-using MvcSiteMapProvider;
-using Takenet.MarkDocs;
-
-namespace YourNamespace
-{
-    public class DocsDynamicNodeProvider : DynamicNodeProviderBase
-    {
-        private Takenet.MarkDocs.DynamicNodeProvider DynamicNodeProvider { get; }
-
-        public DocsDynamicNodeProvider(Takenet.MarkDocs.DynamicNodeProvider dynamicNodeProvider) 
-        {
-            DynamicNodeProvider = dynamicNodeProvider;
-        }
-
-        public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
-        {
-            return DynamicNodeProvider.GetDynamicNodeCollection().Select(n => new DynamicNode
-            {
-                Key = n.Key,
-                ParentKey = n.ParentKey,
-                Title = n.Title,
-                Action = n.Action
-            });
-        }
-    }
-}
-```
-
-### Changes to mvc.sitemap
-
-Create a SiteMap node to host the documentation links
+ - Create/Change your `mvc.sitemap` node to host the documentation links
 
 ```xml
 <mvcSiteMapNode title="Documentation" controller="Docs" action="Root/Introduction"
@@ -104,42 +29,12 @@ Make sure the instantiation is by web request, otherwise cached values will be r
 container.RegisterPerWebRequest<MarkDocsProvider>();
 ```
 
-### DocsController
-
-Create a ASP.NET MVC Controller to handle the documentation requests
-
-```csharp
-namespace YourNamespace.Controllers
-{
-    public partial class DocsController : Controller
-    {
-        // You need to configure your DI to inject the MarkDocsProvider on your controllers
-        public DocsController(MarkDocsProvider markDocs)
-        {
-            MarkDocs = markDocs;
-        }
-
-        private MarkDocsProvider MarkDocs { get; }
-
-        public virtual async Task<ActionResult> Show(string folder, string document)
-        {
-            // Load the markdown document
-            var markdown = await MarkDocs.GetDocumentAsync(folder, document);
-
-            // Return the view with the markdown document to be loaded
-            return View(markdown);
-        }
-    }
-}
-```
-
 ### Docs Views
 
 You need to create a view inside the folder `Views/Docs` named `Show.cshtml` to display your markdown document
 
-## Markdown File Structure
 
-### Folder and file names
+## Folder and file names
 
 On the GitHub project that will host your documentation filed, create a `docs` folder in the root folder.
 

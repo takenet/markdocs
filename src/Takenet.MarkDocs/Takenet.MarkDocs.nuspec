@@ -1,26 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-  <metadata>
-    <id>Takenet.MarkDocs</id>
-    <version>0.1.0</version>
-    <title>MarkDocs</title>
-    <authors>takenet</authors>
-    <owners>takenet,rafaelromao</owners>
-    <projectUrl>http://github.com/takenet/markdocs</projectUrl>
-    <licenseUrl>https://raw.githubusercontent.com/takenet/markdocs/master/LICENSE</licenseUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Markdown Documentation Library</description>
-    <copyright>Copyright © 2015 Curupira S/A</copyright>
-    <tags>markdown</tags>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
-    </dependencies>
-    <summary>
-      ASP.NET MVC library that provide markdown documentation
-    </summary>
-  </metadata>
-  <files>
-    <file src="bin\Release\Takenet.MarkDocs.dll" target="lib\net451\Takenet.MarkDocs.dll" />
-    <file src="bin\Release\Takenet.MarkDocs.pdb" target="lib\net451\Takenet.MarkDocs.pdb" />
-  </files>
+    <metadata>
+        <id>Takenet.MarkDocs</id>
+        <version>$version$</version>
+        <title>MarkDocs</title>
+        <authors>Takenet</authors>
+        <owners>takenet,rafaelromao</owners>
+        <licenseUrl>https://raw.githubusercontent.com/takenet/markdocs/master/LICENSE</licenseUrl>
+        <projectUrl>http://github.com/takenet/markdocs</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>ASP.NET MVC library that provide markdown documentation</description>
+        <summary>ASP.NET MVC library that provide markdown documentation</summary>
+        <copyright>Copyright © 2016 Curupira S/A</copyright>
+        <tags>markdown</tags>
+        <dependencies>
+            <dependency id="Newtonsoft.Json" version="6.0.8" />
+            <dependency id="MvcSiteMapProvider.MVC5.Core" version="4.6.22" />
+            <dependency id="Microsoft.AspNet.Mvc" version="5.0.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Nuget\DocsController.cs.pp" target="content\Controllers\DocsController.cs.pp" />
+        <file src="Nuget\DocsDynamicNodeProvider.cs.pp" target="content\DocsDynamicNodeProvider.cs.pp" />
+        <file src="Nuget\web.config.install.xdt" target="content\web.config.install.xdt" />
+        <file src="Nuget\web.config.uninstall.xdt" target="content\web.config.uninstall.xdt" />
+        <file src="bin\Release\Takenet.MarkDocs.dll" target="lib\net451\Takenet.MarkDocs.dll" />
+    </files>
 </package>

@@ -1,0 +1,26 @@
+﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections>
+    <section name="markdocs" type="Takenet.MarkDocs.MarkDocsSection, Takenet.MarkDocs, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null" requirePermission="false" xdt:Transform="Insert" />
+  </configSections>
+
+  <markdocs xdt:Transform="Insert" >
+    <node display="documentation"
+        targetFolder="home"
+        username="YOUR_GITUB_USER"
+        password="YOUR_GITHUB_ACCESSTOKEN"
+        owner="takenet"
+        repo="markdocs"
+        branch="master"
+        sourceFolder="docs"
+        localized="true" />
+    <node display="sdks"
+        targetFolder="sdks"
+        username="YOUR_GITUB_USER"
+        password="YOUR_GITHUB_ACCESSTOKEN"
+        owner="takenet"
+        repo="markdocs-sdks"
+        branch="master"
+        sourceFolder="docs"
+        localized="true" />
+  </markdocs>
+</configuration>

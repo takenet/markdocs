@@ -1,0 +1,5 @@
+﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections>
+    <section name="markdocs" type="Takenet.MarkDocs.MarkDocsSection, Takenet.MarkDocs, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null" requirePermission="false" xdt:Transform="Remove" xdt:Locator="Match(name)" />
+  </configSections>
+</configuration>
