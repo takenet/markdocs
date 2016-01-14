@@ -13,30 +13,15 @@ namespace Takenet.MarkDocs
 
         protected override string ElementName => ItemPropertyName;
 
-        protected override bool IsElementName(string elementName)
-        {
-            return (elementName == ItemPropertyName);
-        }
+        protected override bool IsElementName(string elementName) => (elementName == ItemPropertyName);
 
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((NodeElement)element).TargetFolder;
-        }
+        protected override object GetElementKey(ConfigurationElement element) => ((NodeElement)element).TargetFolder;
 
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new NodeElement();
-        }
+        protected override ConfigurationElement CreateNewElement() => new NodeElement();
 
-        public override bool IsReadOnly()
-        {
-            return false;
-        }
+        public override bool IsReadOnly() => false;
 
-        public new IEnumerator<NodeElement> GetEnumerator()
-        {
-            return new NodeCollectionEnumerator(this);
-        }
+        public new IEnumerator<NodeElement> GetEnumerator() => new NodeCollectionEnumerator(this);
 
         public sealed class NodeCollectionEnumerator : IEnumerator<NodeElement>
         {
@@ -45,7 +30,7 @@ namespace Takenet.MarkDocs
                 Collection = collection;
             }
 
-            private readonly NodeCollection Collection;
+            readonly NodeCollection Collection;
 
             public NodeElement Current => (this as IEnumerator).Current as NodeElement;
 
@@ -53,7 +38,7 @@ namespace Takenet.MarkDocs
             {
             }
 
-            private int EnumeratorIndex = -1;
+            int EnumeratorIndex = -1;
 
             object IEnumerator.Current => Collection.BaseGet(EnumeratorIndex);
 

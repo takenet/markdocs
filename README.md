@@ -1,79 +1,60 @@
 # Takenet.MarkDocs
 
-Takenet.MarkDocs is a ASP.NET MVC library that provides markdown documentation.
+![TC](https://take-teamcity1.azurewebsites.net/app/rest/builds/buildType:(id:MarkDocs_Master)/statusIcon) [![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs) [![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs)
 
-![TC](https://take-teamcity1.azurewebsites.net/app/rest/builds/buildType:(id:MarkDocs_Master)/statusIcon)
+> Takenet.MarkDocs is a ASP.NET MVC library that provides markdown documentation.
 
-<a href="https://www.nuget.org/packages/Takenet.MarkDocs" rel="NuGet">![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg)</a>
-
-<a href="https://www.nuget.org/packages/Takenet.MarkDocs" rel="NuGet">![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg)</a>
-
-## Dependencies
-
-- .NET Framework 4.5.2
-- ASP.NET MVC 5
-- MVC SiteMap
-- Newtonsoft.Json
-
-## Configuring the Project
+## How to use
 
 ### Changes to Web.Config
 
 Register the session `markdocs` in the `Web.Config` file, like so:
 
-```
-<configuration>
-  <configSections>
+```xml
+<configSections>
     <section name="markdocs" type="Takenet.MarkDocs.MarkDocsSection, Takenet.MarkDocs, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null" requirePermission="false" />
-  </configSections>
+</configSections>
 ```
 
 Register the GitHub project documentation sources
 
-```
-  <markdocs>
+```xml
+<markdocs>
     <node display="documentation"
-          targetFolder="home"
-          username="yourgithubuser"
-          password="yourpersonalaccesstoken"
-          owner="takenet" 
-          repo="markdocs" 
-          branch="master" 
-          sourceFolder="docs" 
-          localized="true">
-      <node display="sdks"
-            targetFolder="sdks" 
-            username="yourgithubuser"
-            password="yourpersonalaccesstoken"
-            owner="takenet" 
-            repo="markdocs-sdks" 
-            branch="master" 
-            sourceFolder="docs" 
-            localized="true" />
+        targetFolder="home"
+        username="<YOUR_GITUB_USER>"
+        password="<YOUR_GITHUB_ACCESSTOKEN>"
+        owner="takenet" 
+        repo="markdocs" 
+        branch="master" 
+        sourceFolder="docs" 
+        localized="true">
+    <node display="sdks"
+        targetFolder="sdks" 
+        username="<YOUR_GITUB_USER>"
+        password="<YOUR_GITHUB_ACCESSTOKEN>"
+        owner="takenet" 
+        repo="markdocs-sdks" 
+        branch="master" 
+        sourceFolder="docs" 
+        localized="true" />
     </node>
-  </markdocs>
+</markdocs>
 ```
+
+* *You can generate your access token on this link: https://github.com/settings/tokens*
 
 An optional default language could be defined on top level element
-```
-  <markdocs defaultLanguage="en">
-```
 
-### Changes to mvc.sitemap
-
-Create a SiteMap node to host the documentation links
-
-```
-<mvcSiteMapNode title="Documentation" controller="Docs" action="Root/Introduction" fa-icon="wrench"
-                dynamicNodeProvider="YourNamespace.DocsDynamicNodeProvider, YourAssembly">
-</mvcSiteMapNode>
+```xml
+<markdocs defaultLanguage="en">
 ```
 
 ### DocsDynamicNodeProvider
 
 Create a `DocsDynamicNodeProvider` reading the `Takenet.MarkDocs.DynamicNodeProvider` in your project
 
-```
+```csharp
 using System.Collections.Generic;
 using MvcSiteMapProvider;
 using Takenet.MarkDocs;
@@ -103,14 +84,23 @@ namespace YourNamespace
 }
 ```
 
+### Changes to mvc.sitemap
+
+Create a SiteMap node to host the documentation links
+
+```xml
+<mvcSiteMapNode title="Documentation" controller="Docs" action="Root/Introduction"
+                dynamicNodeProvider="YourNamespace.DocsDynamicNodeProvider, YourAssembly">
+</mvcSiteMapNode>
+```
+
 ### Dependency Injection
 
 You need to configure your DI to inject the `MarkDocsProvider` on your controllers and on your `DynamicNodeProvider`
 
 Make sure the instantiation is by web request, otherwise cached values will be reused for different users
 
-```
-// DI configuration for Simple injector
+```csharp
 container.RegisterPerWebRequest<MarkDocsProvider>();
 ```
 
@@ -118,7 +108,7 @@ container.RegisterPerWebRequest<MarkDocsProvider>();
 
 Create a ASP.NET MVC Controller to handle the documentation requests
 
-```
+```csharp
 namespace YourNamespace.Controllers
 {
     public partial class DocsController : Controller
@@ -157,14 +147,14 @@ If you want to localize your docs, create a folder for each culture.
 At the moment only TweLetterCultureCodes are supported as culture options.
 Name your folder accordingly. Ex:
 
-```
-   - docs
-      - en
-          - 1-index.md
-          - 2-about.md
-      - pt
-          - 1-index.md
-          - 2-about.md
+```yaml
+- docs
+    - en
+        - 1-index.md
+        - 2-about.md
+    - pt
+        - 1-index.md
+        - 2-about.md
 ```
 
 ### File name sorting

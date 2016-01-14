@@ -21,8 +21,7 @@ namespace Takenet.MarkDocs
         protected virtual MarkDocsSection Settings => markDocsSettings;
 
         protected virtual HttpClient GetWebClient() => new HttpClient();
-
-
+        
         public async Task<string> GetDocumentAsync(string folder, string document)
         {
             const string errorMessage = "Could not find the requested document!";
@@ -86,8 +85,7 @@ namespace Takenet.MarkDocs
 
             return result;
         }
-
-
+        
         private async Task<string> GetFileNameAsync(NodeElement node, string document)
         {
             var fileNames = await GetFileNamesAsync(node).ConfigureAwait(false);
