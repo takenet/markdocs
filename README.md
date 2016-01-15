@@ -1,6 +1,8 @@
 # Takenet.MarkDocs
 
-![TC](https://take-teamcity1.azurewebsites.net/app/rest/builds/buildType:(id:MarkDocs_Master)/statusIcon) [![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs) [![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs)
+[![Build status](https://img.shields.io/appveyor/ci/Takenet/Takenet.MarkDocs.svg?style=flat-square)](https://ci.appveyor.com/project/Takenet/markdocs)
+[![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs) 
+[![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs)
 
 > Takenet.MarkDocs is a ASP.NET MVC library that provides markdown documentation.
 
