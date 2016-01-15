@@ -1,6 +1,6 @@
 # Takenet.MarkDocs
 
-[![Build status](https://img.shields.io/appveyor/ci/Takenet/Takenet.MarkDocs.svg?style=flat-square)](https://ci.appveyor.com/project/Takenet/markdocs)
+[![Build status](https://ci.appveyor.com/api/projects/status/icigucyilqsahwb1?svg=true)](https://ci.appveyor.com/project/Takenet/markdocs)
 [![NuGet](https://img.shields.io/nuget/dt/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs) 
 [![NuGet](https://img.shields.io/nuget/v/Takenet.MarkDocs.svg?style=flat-square)](https://www.nuget.org/packages/Takenet.MarkDocs)
 
