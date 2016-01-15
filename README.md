@@ -6,10 +6,12 @@
 
 ## How to use
 
- - Change `markdocs` section in `Web.Config` with GitHub project documentation sources.
+ - Change the `markdocs` section in `Web.Config` with GitHub project documentation sources.
 
 >  * *You can generate your access token on [this link](https://github.com/settings/tokens)*
 >  * *An optional default language could be defined on top level element* `<markdocs defaultLanguage="en">`
+
+The `markdocs` section will be created during the NuGet package installation.
 
  - Create/Change your `mvc.sitemap` node to host the documentation links
 
@@ -19,22 +21,27 @@
 </mvcSiteMapNode>
 ```
 
+The type `YourNamespace.DocsDynamicNodeProvider` referenced above will be created during the NuGet package installation.
+
 ### Dependency Injection
 
-You need to configure your DI to inject the `MarkDocsProvider` on your controllers and on your `DynamicNodeProvider`
+You need to configure your DI to inject the `MarkDocsProvider` on your `DocsController` and `DocsDynamicNodeProvider`. This example uses [SimpleInjector](https://github.com/simpleinjector/SimpleInjector):
 
 ```csharp
 container.RegisterSingleton<MarkDocsProvider>();
 ```
 
+### Docs Controller
+
+The NuGet package installer will create a `DocsController` with a `Show` action to load your markdown documents and display them in a view.
+
 ### Docs Views
 
-You need to create a view inside the folder `Views/Docs` named `Show.cshtml` to display your markdown document
-
+You need to create a view inside the folder `Views/Docs` named `Show.cshtml` to display your markdown document.
 
 ## Folder and file names
 
-On the GitHub project that will host your documentation filed, create a `docs` folder in the root folder.
+On the GitHub project that will host your documentation files, create a `docs` folder in the root folder.
 
 If you want to localize your docs, create a folder for each culture.
 At the moment, only TweLetterCultureCodes are supported as culture options.
@@ -57,7 +64,7 @@ You need to prefix your markdown files with a number and a dash. The number will
 ## SiteMap Localization
 
 The SiteMap itens can be localized if your enable localization in the `Web.Config` file.
-The localization resources must match the part of the file name discarding the sort index and the extension and should be available in your AppGlobal_Resources.
+The localization resources must match the part of the file name discarding the sort index and the extension and should be available in your `AppGlobal_Resources`.
 
 ## License
 
