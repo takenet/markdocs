@@ -14,7 +14,7 @@
  - Create/Change your `mvc.sitemap` node to host the documentation links
 
 ```xml
-<mvcSiteMapNode title="Documentation" controller="Docs" action="Root/Introduction"
+<mvcSiteMapNode title="Documentation" controller="Docs" action="Show"
                 dynamicNodeProvider="YourNamespace.DocsDynamicNodeProvider, YourAssembly">
 </mvcSiteMapNode>
 ```
@@ -23,10 +23,8 @@
 
 You need to configure your DI to inject the `MarkDocsProvider` on your controllers and on your `DynamicNodeProvider`
 
-Make sure the instantiation is by web request, otherwise cached values will be reused for different users
-
 ```csharp
-container.RegisterPerWebRequest<MarkDocsProvider>();
+container.RegisterSingleton<MarkDocsProvider>();
 ```
 
 ### Docs Views
@@ -39,7 +37,7 @@ You need to create a view inside the folder `Views/Docs` named `Show.cshtml` to 
 On the GitHub project that will host your documentation filed, create a `docs` folder in the root folder.
 
 If you want to localize your docs, create a folder for each culture.
-At the moment only TweLetterCultureCodes are supported as culture options.
+At the moment, only TweLetterCultureCodes are supported as culture options.
 Name your folder accordingly. Ex:
 
 ```yaml
