@@ -66,7 +66,7 @@ You need to prefix your markdown files with a number and a dash. The number will
 ## SiteMap Localization
 
 The SiteMap itens can be localized if your enable localization in the `Web.Config` file.
-The localization resources must match the part of the file name discarding the sort index and the extension and should be available in your `AppGlobal_Resources`.
+The localization resources must match the part of the file name discarding the sort index and the extension and should be available in your `AppGlobal_Resources` named `SiteMapResources`.
 
 ## License
 
