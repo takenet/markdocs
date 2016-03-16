@@ -36,23 +36,23 @@ namespace Takenet.MarkDocs
             if (node == null)
                 return errorMessage;
 
-            document = await GetFileNameAsync(node, document);
+            document = await GetFileNameAsync(node, document).ConfigureAwait(false);
             if (document == null)
                 return errorMessage;
 
             var resourceUri = $"{sourceUrl}/{document}";
             using (var webClient = GetWebClient())
             {
-                var httpResponse = await webClient.GetAsync(resourceUri);
+                var httpResponse = await webClient.GetAsync(resourceUri).ConfigureAwait(false);
                 if (httpResponse.StatusCode == HttpStatusCode.NotFound && !string.IsNullOrWhiteSpace(Settings.DefaultLanguage))
                 {
                     sourceUrl = BaseUrlForRawFiles(folder, Settings.DefaultLanguage);
                     resourceUri = $"{sourceUrl}/{document}";
-                    httpResponse = await webClient.GetAsync(resourceUri);
+                    httpResponse = await webClient.GetAsync(resourceUri).ConfigureAwait(false);
                 }
 
                 httpResponse.EnsureSuccessStatusCode();
-                return await httpResponse.Content.ReadAsStringAsync();
+                return await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Takenet.MarkDocs
                     return Enumerable.Empty<string>();
             }
 
-            var fileNames = await GetChildItemsFileNamesAsync(docs, node.Username, node.Password);
+            var fileNames = await GetChildItemsFileNamesAsync(docs, node.Username, node.Password).ConfigureAwait(false);
 
             return fileNames;
         }
