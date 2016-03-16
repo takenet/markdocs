@@ -35,7 +35,8 @@ namespace Takenet.MarkDocs
                 Key = Guid.NewGuid().ToString(),
                 ParentKey = parentKey,
                 Title = DisplayFor(item.Display, item.Localized),
-                Folder = item.TargetFolder
+                Folder = item.TargetFolder,
+                IsLocalized = item.Localized
             };
             result.Add(parentSiteMapNode);
 
