@@ -80,7 +80,8 @@ namespace Takenet.MarkDocs
                     Key = Guid.NewGuid().ToString(),
                     Title = DisplayFor(document, isLocalized),
                     Folder = folder,
-                    Document = document
+                    Document = document,
+                    IsLocalized = isLocalized
                 };
             });
         }
