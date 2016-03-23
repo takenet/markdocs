@@ -4,13 +4,18 @@ namespace Takenet.MarkDocs
 {
     public class NodeElement : ConfigurationElement, INode
     {
-        //Ex: <node id="sdks" display="SDKs" owner="takenet" repo="messaginghub-client-csharp" branch="master" folder="docs" localized="true" />
-
         [ConfigurationProperty("targetFolder", DefaultValue = null, IsRequired = true, IsKey = true)]
         public string TargetFolder
         {
             get { return (string)this["targetFolder"]; }
             set { this["targetFolder"] = value; }
+        }
+
+        [ConfigurationProperty("index", DefaultValue = "index", IsRequired = true, IsKey = true)]
+        public string Index
+        {
+            get { return (string)this["index"]; }
+            set { this["index"] = value; }
         }
 
         [ConfigurationProperty("username", DefaultValue = null, IsRequired = true, IsKey = true)]
